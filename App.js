@@ -11,36 +11,51 @@ import Header from "./components/Header";
 import GuessScreen from "./screens/guessNumberScreen";
 import GameScreen from "./screens/GameScreen";
 import GameOverScreen from "./screens/GameOverScreen";
+import * as Font from "expo-font";
+import { AppLoading } from "expo";
 
 export default function App() {
   const [userSelectedInput, SetUserSelectedInput] = useState();
-  const [roundCount, setRoundCount] = useState(0);
+  const [guessStack, setGuessStack] = useState([]);
+  const [isFontLoaded, setFontLoaded] = useState(false);
+  const loadFonts = () => {
+    return Font.loadAsync({
+      "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
+      "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+    });
+  };
+
+  if (!isFontLoaded) {
+    return (
+      <AppLoading startAsync={loadFonts} onFinish={() => setFontLoaded(true)} />
+    );
+  }
 
   const configureNewGame = () => {
     SetUserSelectedInput(null);
-    setRoundCount(0);
+    setGuessStack([]);
   };
 
   const inputHandler = (selectedInput) => {
     SetUserSelectedInput(selectedInput);
   };
 
-  const roundCountHandler = (count) => {
-    setRoundCount(count);
+  const guessStackHandler = (guessStack) => {
+    setGuessStack(guessStack);
   };
 
   let currentScreen = <GuessScreen onStartGame={inputHandler} />;
-  if (userSelectedInput && roundCount <= 0) {
+  if (userSelectedInput && guessStack.length <= 0) {
     currentScreen = (
       <GameScreen
         userInput={userSelectedInput}
-        roundCounter={roundCountHandler}
+        guessStackHandler={guessStackHandler}
       />
     );
-  } else if (roundCount > 0) {
+  } else if (guessStack.length > 0) {
     currentScreen = (
       <GameOverScreen
-        roundsCount={roundCount}
+        guessStack={guessStack}
         usersInput={userSelectedInput}
         onRestart={configureNewGame}
       />

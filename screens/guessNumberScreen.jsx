@@ -41,7 +41,7 @@ export default (props) => {
   return (
     <View style={styles.screen}>
       <View style={styles.title}>
-        <Text>Start a new game!!!</Text>
+        <Text style={styles.startText}>Start a new game!!!</Text>
       </View>
       <Card>
         <Text>{"Enter a number"} </Text>
@@ -92,6 +92,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     width: "100%",
+  },
+  startText: {
+    fontFamily: "open-sans-bold",
   },
   title: {
     paddingVertical: 5,

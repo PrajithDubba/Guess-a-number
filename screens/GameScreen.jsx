@@ -14,13 +14,16 @@ export default (props) => {
   const min = useRef(1);
   const max = useRef(100);
   let guess = randomNumberGenerator(min.current, max.current, props.userInput);
+  const [guessStack, updateGuessStack] = useState([
+    { id: Math.random() + guess + "", value: guess },
+  ]);
   const [guessNumber, setGuessNumber] = useState(guess);
   const [roundCount, setRoundCount] = useState(0);
 
-  const { userInput, roundCounter } = props;
+  const { userInput, guessStackHandler } = props;
   useEffect(() => {
     if (userInput === guessNumber) {
-      roundCounter(roundCount);
+      guessStackHandler(guessStack);
     }
   }, [guessNumber]);
 
@@ -37,6 +40,10 @@ export default (props) => {
     let newGuess = randomNumberGenerator(min.current, max.current);
 
     setGuessNumber(newGuess);
+    updateGuessStack((currentGuessStack) => [
+      ...currentGuessStack,
+      { id: Math.random() + newGuess + "", value: newGuess },
+    ]);
     setRoundCount((current) => current + 1);
   };
   return (
